@@ -1,6 +1,5 @@
 import React from "react";
 import { GithubIcon } from "@/components/icons";
-import { ModeToggle } from "@/components/theme-toggle";
 import { Button } from "../ui/button";
 
 interface Link {

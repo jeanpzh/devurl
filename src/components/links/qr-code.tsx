@@ -10,8 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Download, Share2, QrCode, Copy, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Download, QrCode } from "lucide-react";
 
 interface QRCodeDisplayProps {
   shortUrl: string;

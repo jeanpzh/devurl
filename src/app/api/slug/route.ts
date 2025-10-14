@@ -1,6 +1,5 @@
 import { createOfflineLinkSchema } from "@/schemas/create-offline-link.schema";
 import { NextRequest, NextResponse } from "next/server";
-import { UrlService } from "../url/services/url.service";
 import { SlugRepository } from "./repository/slug.repository.impl";
 import { SlugService } from "./services/slug.service";
 import { supabase } from "@/lib/supabase";
