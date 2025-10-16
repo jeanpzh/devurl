@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  removeConsole: process.env.NODE_ENV === "production",
 };
 
 export default nextConfig;
