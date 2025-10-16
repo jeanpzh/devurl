@@ -8,7 +8,11 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  removeConsole: true,
+  compiler: {
+    removeConsole: {
+      exclude: ["error", "warn"],
+    },
+  },
 };
 
 export default nextConfig;

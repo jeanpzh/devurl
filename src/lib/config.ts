@@ -11,9 +11,9 @@ export const clientEnvSchema = object({
 });
 
 export const serverEnv = serverEnvSchema.parse({
-  SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  SUPABASE_KEY: process.env.NEXT_PUBLIC_PUBLISHABLE_KEY,
-  DOMAIN_URL: process.env.NEXT_PUBLIC_DOMAIN_URL,
+  SUPABASE_URL: process.env.SUPABASE_URL,
+  SUPABASE_KEY: process.env.SUPABASE_KEY,
+  DOMAIN_URL: process.env.DOMAIN_URL,
 });
 
 export const clientEnv = clientEnvSchema.parse({
