@@ -16,7 +16,6 @@ import { Pencil, Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Field from "@/components/field";
-import { clientEnv } from "@/lib/config";
 import { useUpdateLink } from "@/app/dashboard/hooks/use-update-url";
 import {
   createLinkSchema as updateLinkSchema,
@@ -109,7 +108,7 @@ export default function UpdateLinkButton({ url, slug, id }: UpdateLinkInput) {
                   <Label className="text-sm font-medium">Slug</Label>
                   <div className="flex items-center gap-2 w-full">
                     <span className="text-sm text-muted-foreground font-mono whitespace-nowrap">
-                      {clientEnv.NEXT_PUBLIC_DOMAIN_URL}/
+                      {process.env.NEXT_PUBLIC_DOMAIN_URL}/
                     </span>
                     <Field
                       control={control}
@@ -123,7 +122,7 @@ export default function UpdateLinkButton({ url, slug, id }: UpdateLinkInput) {
                   control={control}
                   name="url"
                   label="URL Original"
-                  placeholder={`${clientEnv.NEXT_PUBLIC_DOMAIN_URL}/alias`}
+                  placeholder={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/alias`}
                 />
 
                 <div className="flex gap-2 pt-2">
@@ -151,7 +150,7 @@ export default function UpdateLinkButton({ url, slug, id }: UpdateLinkInput) {
                   <div className="space-y-2">
                     <Label className="text-sm font-medium ">Nuevo Slug</Label>
                     <p className="text-sm font-mono text-foreground/80">
-                      {clientEnv.NEXT_PUBLIC_DOMAIN_URL}/
+                      {process.env.NEXT_PUBLIC_DOMAIN_URL}/
                       {formState.dirtyFields.slug
                         ? control._formValues.slug
                         : slug}

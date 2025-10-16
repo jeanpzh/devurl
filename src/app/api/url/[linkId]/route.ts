@@ -3,7 +3,6 @@ import { createLinkSchema } from "@/schemas/link.schema";
 import { UrlService } from "../services/url.service";
 import { UrlRepositoryImpl } from "../repository/url.repository.impl";
 import { createClient } from "@/lib/supabase/server";
-import { env } from "@/lib/config";
 
 const blockedPaths = ["api", "dashboard"];
 
@@ -36,7 +35,7 @@ export const PATCH = async (
     }
 
     const urlHost = new URL(validated.data.url).host;
-    const domainHost = new URL(env.NEXT_PUBLIC_DOMAIN_URL).host;
+    const domainHost = new URL(process.env.NEXT_PUBLIC_DOMAIN_URL).host;
     if (urlHost === domainHost) {
       return NextResponse.json(
         { error: "No puedes acortar una URL de este dominio" },

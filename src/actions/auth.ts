@@ -1,6 +1,5 @@
 "use server";
 
-import { serverEnv } from "@/lib/config";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -9,7 +8,7 @@ export const signInWithGoogle = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${serverEnv.DOMAIN_URL}/auth/callback`,
+      redirectTo: `${process.env.DOMAIN_URL}/auth/callback`,
     },
   });
   if (error) {
@@ -26,7 +25,7 @@ export const signInWithGitHub = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "github",
     options: {
-      redirectTo: `${serverEnv.DOMAIN_URL}/auth/callback`,
+      redirectTo: `${process.env.DOMAIN_URL}/auth/callback`,
     },
   });
   if (error) {

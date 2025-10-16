@@ -2,7 +2,6 @@ import { createLinkSchema } from "@/schemas/link.schema";
 import { NextRequest, NextResponse } from "next/server";
 import { SlugRepository } from "./repository/slug.repository.impl";
 import { SlugService } from "./services/slug.service";
-import { env } from "@/lib/config";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
@@ -43,7 +42,7 @@ export async function POST(request: NextRequest) {
   }
 
   const urlHost = new URL(parsed.data.url).host;
-  const domainHost = new URL(env.NEXT_PUBLIC_DOMAIN_URL).host;
+  const domainHost = new URL(process.env.NEXT_PUBLIC_DOMAIN_URL).host;
   if (urlHost === domainHost) {
     return NextResponse.json(
       { error: "No puedes acortar una URL de este dominio" },
@@ -64,7 +63,7 @@ export async function POST(request: NextRequest) {
   await slugService.createSlug(parsed.data);
 
   return NextResponse.json(
-    { url: `${env.NEXT_PUBLIC_DOMAIN_URL}/${slug}` },
+    { url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/${slug}` },
     { status: 201 }
   );
 }

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Dialog,
@@ -19,7 +18,6 @@ import { useForm } from "react-hook-form";
 import { CreateLinkInput, createLinkSchema } from "@/schemas/link.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Field from "@/components/field";
-import { clientEnv } from "@/lib/config";
 
 interface CreationResult {
   shorterLink: string;
@@ -126,7 +124,7 @@ export default function AddShortUrlButton({
                   control={control}
                   name="url"
                   label="Link a acortar"
-                  placeholder={`${clientEnv.NEXT_PUBLIC_DOMAIN_URL}/tu-alias`}
+                  placeholder={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/tu-alias`}
                 />
 
                 <div className="space-y-1.5">
@@ -135,7 +133,7 @@ export default function AddShortUrlButton({
                   </Label>
                   <div className="flex items-center gap-2 w-full ">
                     <span className="text-sm text-muted-foreground font-mono whitespace-nowrap ">
-                      {clientEnv.NEXT_PUBLIC_DOMAIN_URL}/
+                      {process.env.NEXT_PUBLIC_DOMAIN_URL}/
                     </span>
                     <Field
                       control={control}

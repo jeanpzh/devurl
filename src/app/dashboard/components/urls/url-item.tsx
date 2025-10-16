@@ -5,7 +5,6 @@ import { EyeIcon, ExternalLinkIcon, CalendarIcon } from "lucide-react";
 import DeleteLink from "./delete-link";
 import UpdateLink from "./update-link";
 import { QRCodeDisplay } from "@/components/links/qr-code";
-import { env } from "@/lib/config";
 
 const URLItemContext = createContext<ShortLink | null>(null);
 
@@ -47,7 +46,7 @@ URLItem.displayName = "URLItem";
 const URLItemShort = () => {
   const { slug } = useURLItemContext();
   return (
-    <ShorterLinkResult shorterLink={`${env.NEXT_PUBLIC_DOMAIN_URL}/${slug}`} />
+    <ShorterLinkResult shorterLink={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/${slug}`} />
   );
 };
 URLItemShort.displayName = "URLItemShort";
@@ -88,7 +87,7 @@ const URLItemQRButton = () => {
     shadow-(--shadow-s)
     "
     >
-      <QRCodeDisplay shortUrl={`${env.NEXT_PUBLIC_DOMAIN_URL}/${slug}`} />
+      <QRCodeDisplay shortUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/${slug}`} />
     </div>
   );
 };
