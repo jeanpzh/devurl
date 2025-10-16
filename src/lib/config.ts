@@ -1,28 +1,25 @@
-import { object, string, url } from "zod";
+import { z } from "zod";
 
-export const serverEnvSchema = object({
-  SUPABASE_URL: url(),
-  SUPABASE_KEY: string(),
-  DOMAIN_URL: url(),
+import env from "@next/env";
+
+const environmentVariables = z.object({
+  SUPABASE_URL: z.url(),
+  PUBLISHABLE_KEY: z.string(),
+  DOMAIN_URL: z.url(),
+  NEXT_PUBLIC_DOMAIN_URL: z.url(),
+  UPSTASH_REDIS_REST_URL: z.url(),
+  UPSTASH_REDIS_REST_TOKEN: z.string(),
 });
 
-export const clientEnvSchema = object({
-  NEXT_PUBLIC_DOMAIN_URL: url(),
-});
+type EnvironmentVariables = z.infer<typeof environmentVariables>;
 
-export const serverEnv = serverEnvSchema.parse({
-  SUPABASE_URL: process.env.SUPABASE_URL,
-  SUPABASE_KEY: process.env.SUPABASE_KEY,
-  DOMAIN_URL: process.env.DOMAIN_URL,
-});
+const projectDir = process.cwd();
 
-export const clientEnv = clientEnvSchema.parse({
-  NEXT_PUBLIC_DOMAIN_URL: process.env.NEXT_PUBLIC_DOMAIN_URL,
-});
+env.loadEnvConfig(projectDir);
 
-export const env =
-  typeof window === "undefined" ? { ...serverEnv, ...clientEnv } : clientEnv;
-
-export type ServerEnv = typeof serverEnv;
-export type ClientEnv = typeof clientEnv;
-export type Env = typeof env;
+environmentVariables.parse(process.env);
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv extends EnvironmentVariables {}
+  }
+}
