@@ -41,6 +41,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --shadow-sm: var(--shadow-s);
+  --shadow-md: var(--shadow-m);
+  --shadow-lg: var(--shadow-l);
 }
 
 :root {
@@ -76,10 +79,27 @@
   --sidebar-ring: oklch(0.708 0 0);
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
-}
+  --shadow-s : 
+    inset 0 1px 2px #ffffff30,
+    0 1px 2px #00000030,
+    0 2px 4px #00000020;
+  --shadow-m :
+    inset 0 1px 3px #ffffff30,
+    0 4px 6px -1px #00000030,
+    0 2px 4px -1px #00000020;
+  --shadow-l :
+    inset 0 1px 3px #ffffff30,
+    0 10px 15px -3px #00000030,
+    0 4px 6px -2px #00000020;
+
+  }
+
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background-s :oklch(0.15 0 264); /* Shadow Small */
+  --background: oklch(0.2 0 264);
+  --background-l :oklch(0.3 0 264); /* Active */
+  --background-light: oklch(0.269 0 264); /* Hover */
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
