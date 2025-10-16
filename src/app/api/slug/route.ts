@@ -1,10 +1,12 @@
-import { createOfflineLinkSchema } from "@/schemas/create-offline-link.schema";
+import { createLinkSchema } from "@/schemas/link.schema";
 import { NextRequest, NextResponse } from "next/server";
 import { SlugRepository } from "./repository/slug.repository.impl";
 import { SlugService } from "./services/slug.service";
-import { supabase } from "@/lib/supabase";
 import { env } from "@/lib/config";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { createClient } from "@/lib/supabase/server";
+
+const blockedPaths = ["api", "dashboard"];
 
 export async function POST(request: NextRequest) {
   const { rateLimited, reset, remaining } = await checkRateLimit(request);
@@ -29,19 +31,26 @@ export async function POST(request: NextRequest) {
   }
 
   const { url, slug } = await request.json();
-  const parsed = createOfflineLinkSchema.safeParse({ url, slug });
+  const parsed = createLinkSchema.safeParse({ url, slug });
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Introdusca una URL válida", details: parsed.error.issues },
       { status: 400 }
     );
   }
-  if (url === slug) {
+  if (blockedPaths.includes(parsed.data.slug)) {
+    return NextResponse.json({ error: "Slug bloqueado" }, { status: 409 });
+  }
+
+  const urlHost = new URL(parsed.data.url).host;
+  const domainHost = new URL(env.NEXT_PUBLIC_DOMAIN_URL).host;
+  if (urlHost === domainHost) {
     return NextResponse.json(
-      { error: "URL and slug cannot be the same" },
+      { error: "No puedes acortar una URL de este dominio" },
       { status: 400 }
     );
   }
+  const supabase = await createClient();
   const slugService = new SlugService(new SlugRepository(supabase));
 
   const exists = await slugService.exists(slug);
@@ -55,7 +64,7 @@ export async function POST(request: NextRequest) {
   await slugService.createSlug(parsed.data);
 
   return NextResponse.json(
-    { url: `${env.DOMAIN_URL}/${slug}` },
+    { url: `${env.NEXT_PUBLIC_DOMAIN_URL}/${slug}` },
     { status: 201 }
   );
 }

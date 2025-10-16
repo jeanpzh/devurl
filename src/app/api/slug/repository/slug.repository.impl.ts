@@ -7,7 +7,7 @@ export class SlugRepository implements ISlugRepository {
   }
   async exists(slug: string): Promise<boolean> {
     const { data, error } = await this.supabaseClient
-      .from("offline_links")
+      .from("urls")
       .select("id")
       .eq("slug", slug);
     if (error || !data) {
@@ -18,7 +18,7 @@ export class SlugRepository implements ISlugRepository {
   }
 
   async create(params: { url: string; slug: string }): Promise<{ error: any }> {
-    const { error } = await this.supabaseClient.from("offline_links").insert({
+    const { error } = await this.supabaseClient.from("urls").insert({
       original_url: params.url,
       slug: params.slug,
     });
@@ -30,7 +30,7 @@ export class SlugRepository implements ISlugRepository {
   }
   async findBySlug(slug: string): Promise<{ originalUrl: string | null }> {
     const { data, error } = await this.supabaseClient
-      .from("offline_links")
+      .from("urls")
       .select("original_url")
       .eq("slug", slug)
       .single();
@@ -39,5 +39,15 @@ export class SlugRepository implements ISlugRepository {
       return { originalUrl: null };
     }
     return { originalUrl: data.original_url };
+  }
+  async incrementClickCount(slug: string): Promise<void> {
+    const { error } = await this.supabaseClient.rpc("increment_clicks", {
+      slug_input: slug,
+    });
+    if (error) {
+      console.log(error);
+    }
+    console.log("Incremented click count for slug:", slug);
+    return;
   }
 }

@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
 import { SlugService } from "@/app/api/slug/services/slug.service";
 import { SlugRepository } from "@/app/api/slug/repository/slug.repository.impl";
 import { redirectRateLimit, getClientIdentifier } from "@/lib/rate-limit";
+import { createClient } from "@/lib/supabase/server";
+import { object, string } from "zod";
+
+const getLinkSchema = object({
+  slug: string().min(1, "Slug is required"),
+});
 
 export const GET = async (
   req: NextRequest,
@@ -28,6 +33,14 @@ export const GET = async (
   const { params } = await context;
   const { slug } = params;
   if (!slug) return new NextResponse("Slug es requerido", { status: 400 });
+  const parsed = getLinkSchema.safeParse({ slug });
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Slug inválido", details: parsed.error.issues },
+      { status: 400 }
+    );
+  }
+  const supabase = await createClient();
   const slugRepo = new SlugRepository(supabase);
   const slugService = new SlugService(slugRepo);
 
@@ -35,5 +48,6 @@ export const GET = async (
   if (!originalUrl) {
     return new NextResponse("Slug no encontrado", { status: 404 });
   }
+  await slugService.incrementClickCount(slug);
   return NextResponse.redirect(originalUrl);
 };

@@ -5,4 +5,5 @@ export interface ISlugRepository {
     slug: string;
   }): Promise<{ error: any }>;
   findBySlug(slug: string): Promise<{ originalUrl: string | null }>;
+  incrementClickCount(slug: string): Promise<void>;
 }

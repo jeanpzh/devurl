@@ -1,4 +1,5 @@
-import { CreateOfflineLinkInput } from "@/schemas/create-offline-link.schema";
+import { CreateLinkInput } from "@/schemas/link.schema";
+
 import { ISlugRepository } from "../repository/slug.repository.interface";
 
 export class SlugService {
@@ -6,7 +7,7 @@ export class SlugService {
   constructor(slugRepository: ISlugRepository) {
     this.slugRepository = slugRepository;
   }
-  async createSlug(params: CreateOfflineLinkInput) {
+  async createSlug(params: CreateLinkInput) {
     const { error } = await this.slugRepository.create(params);
     if (error) throw new Error("Error creating slug");
   }
@@ -15,5 +16,8 @@ export class SlugService {
   }
   async findBySlug(slug: string): Promise<{ originalUrl: string | null }> {
     return this.slugRepository.findBySlug(slug);
+  }
+  async incrementClickCount(slug: string): Promise<void> {
+    return this.slugRepository.incrementClickCount(slug);
   }
 }
