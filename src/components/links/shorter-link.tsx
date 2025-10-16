@@ -49,7 +49,7 @@ export function ShorterLinkResult({
   return (
     <div
       className={cn(
-        "group relative flex items-center gap-3 rounded-lg border border-border bg-card p-4 transition-all hover:border-primary hover:shadow-md cursor-pointer",
+        "group relative flex items-center gap-3 rounded-lg  p-4 transition-all  cursor-pointer",
         className
       )}
       onClick={handleNavigate}
@@ -57,7 +57,6 @@ export function ShorterLinkResult({
       <div className="flex-1 flex items-center gap-2 min-w-0">
         <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
         <div className="flex items-center gap-1 font-mono text-sm min-w-0 overflow-hidden">
-          <span className="text-primary font-semibold">{host}</span>
           <span className="text-muted-foreground">/</span>
           <span className="text-foreground font-medium truncate">{slug}</span>
         </div>

@@ -101,13 +101,12 @@ export function QRCodeDisplay({
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button
-            variant="ghost"
-            size="sm"
-            className="flex-1 gap-2"
+            variant="outline"
+            size="icon"
+            className="flex-1 gap-2 rounded-full"
             type="button"
           >
             <QrCode className="h-4 w-4" />
-            QR
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

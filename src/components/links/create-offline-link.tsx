@@ -2,11 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateOfflineLink } from "@/hooks/use-create-offline-link";
-import {
-  CreateOfflineLinkInput,
-  createOfflineLinkSchema,
-} from "@/schemas/create-offline-link.schema";
+import { useCreateLink } from "@/hooks/use-create-link";
+import { CreateLinkInput, createLinkSchema } from "@/schemas/link.schema";
 import { Button } from "../ui/button";
 import Field from "../field";
 import React from "react";
@@ -15,15 +12,16 @@ import { QRCodeDisplay } from "./qr-code";
 import { Loader2, RefreshCwIcon } from "lucide-react";
 import ShareButton from "./share-button";
 import { env } from "@/lib/config";
+import { fr } from "zod/v4/locales";
 
 export default function CreateOfflineLink() {
   const [shorterLink, setShorterLink] = React.useState<string | null>(null);
-  const { control, handleSubmit, reset } = useForm<CreateOfflineLinkInput>({
-    resolver: zodResolver(createOfflineLinkSchema),
+  const { control, handleSubmit, reset } = useForm<CreateLinkInput>({
+    resolver: zodResolver(createLinkSchema),
   });
-  const { mutateAsync: createLink, isPending, error } = useCreateOfflineLink();
+  const { mutateAsync: createLink, isPending } = useCreateLink();
 
-  const onSubmit = async (data: CreateOfflineLinkInput) => {
+  const onSubmit = async (data: CreateLinkInput) => {
     try {
       const { url } = await createLink(data);
       setShorterLink(url);
@@ -71,15 +69,18 @@ export default function CreateOfflineLink() {
       </Button>
 
       {shorterLink && (
-        <div className="w-full space-y-4 pt-4 border-t animate-in fade-in slide-in-from-top-1 duration-200">
+        <div className="w-full space-y-4 pt-4 border-t animate-in fade-in slide-in-from-top-1 duration-200 max-w-xl mx-auto text-center justify-center">
           <ShorterLinkResult shorterLink={shorterLink} />
           <div className="flex flex-wrap items-center gap-2">
             <QRCodeDisplay shortUrl={shorterLink} />
             <ShareButton shortUrl={shorterLink} />
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
-              className="flex-1 gap-2 min-w-[100px]"
+              className="flex-1 gap-2 min-w-[100px] rounded-full shadow-(--shadow-m) hover:shadow-(--shadow-s)
+              bg-(--background-m) hover:bg-(--background-s)
+              transition
+              "
               type="button"
               onClick={handleReset}
             >

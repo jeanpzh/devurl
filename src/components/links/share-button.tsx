@@ -22,13 +22,17 @@ export default function ShareButton({ shortUrl }: { shortUrl: string }) {
   return (
     <Button
       onClick={handleShare}
-      variant="ghost"
+      variant="outline"
       size="sm"
-      className="flex-1 gap-2"
+      className="flex-1 gap-2
+      bg-(--background-m) hover:bg-(--background-s)
+      transition
+      shadow-(--shadow-m) hover:shadow-(--shadow-s)
+      rounded-full
+      "
       type="button"
     >
       <Share2 className="h-4 w-4" />
-      Compartir
     </Button>
   );
 }
