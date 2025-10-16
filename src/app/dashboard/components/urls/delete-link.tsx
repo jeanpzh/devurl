@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Trash2, AlertTriangle } from "lucide-react";
-import { useDeleteLink } from "../../hooks/use-delete-url";
+import { useDeleteLink } from "@/app/dashboard/hooks/use-delete-url";
 
 interface DeleteLinkButtonProps {
   linkId: string;

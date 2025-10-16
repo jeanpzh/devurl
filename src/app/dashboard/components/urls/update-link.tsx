@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Field from "@/components/field";
 import { clientEnv } from "@/lib/config";
-import { useUpdateLink } from "../../hooks/use-update-url";
+import { useUpdateLink } from "@/app/dashboard/hooks/use-update-url";
 import {
   createLinkSchema as updateLinkSchema,
   CreateLinkInput as UpdateLinkInput,
