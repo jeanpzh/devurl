@@ -59,8 +59,9 @@ export async function POST(request: NextRequest) {
       { status: 409 }
     );
   }
+  const { data } = await supabase.auth.getUser();
 
-  await slugService.createSlug(parsed.data);
+  await slugService.createSlug(parsed.data, data.user?.id!);
 
   return NextResponse.json(
     { url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/${slug}` },

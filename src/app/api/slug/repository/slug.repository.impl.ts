@@ -17,16 +17,22 @@ export class SlugRepository implements ISlugRepository {
     return data.length > 0;
   }
 
-  async create(params: { url: string; slug: string }): Promise<{ error: any }> {
+  async create(
+    params: {
+      url: string;
+      slug: string;
+    },
+    id?: string
+  ): Promise<void> {
     const { error } = await this.supabaseClient.from("urls").insert({
+      user_id: id!,
       original_url: params.url,
       slug: params.slug,
     });
     if (error) {
       console.log(error);
-      throw new Error("Error creating slug");
+      throw new Error("Error creando el slug");
     }
-    return { error };
   }
   async findBySlug(slug: string): Promise<{ originalUrl: string | null }> {
     const { data, error } = await this.supabaseClient
