@@ -2,7 +2,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link2, Sparkles } from "lucide-react";
 import React from "react";
 
-export default function URLNotFound() {
+export default function URLNotFound({
+  debouncedTerm,
+}: {
+  debouncedTerm?: string;
+}) {
+  const isSearching = debouncedTerm && debouncedTerm.trim() !== "";
   return (
     <Card className="col-span-full border-dashed border-2 border-muted-foreground/20 bg-muted/30">
       <CardContent className="flex flex-col items-center justify-center gap-4 p-12 text-center">
@@ -12,10 +17,14 @@ export default function URLNotFound() {
         </div>
         <div className="space-y-2">
           <h3 className="text-xl font-semibold text-foreground">
-            No se encontraron enlaces
+            {isSearching
+              ? "Enlace no encontrado"
+              : "No hay enlaces disponibles"}
           </h3>
           <p className="text-sm text-muted-foreground max-w-md">
-            No se encontraron enlaces con el término de búsqueda.
+            {isSearching
+              ? `No se encontraron enlaces que coincidan con "${debouncedTerm}". Intenta con otro término de búsqueda.`
+              : "No hay enlaces para mostrar. ¡Crea tu primer enlace!"}
           </p>
         </div>
       </CardContent>

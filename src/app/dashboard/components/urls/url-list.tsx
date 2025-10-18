@@ -27,11 +27,11 @@ export default function URLList() {
   }
 
   if (!urls?.data || urls.data.length === 0) {
-    return <URLNotFound />;
+    return <URLNotFound debouncedTerm={debouncedTerm} />;
   }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-4 w-full">
+    <div className="grid  md:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-4 grid-cols-1 w-full">
       {urls.data.map((url: ShortLink) => (
         <URLItemComponent key={url.id} url={url} />
       ))}

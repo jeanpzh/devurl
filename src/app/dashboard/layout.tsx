@@ -7,9 +7,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="dashboard max-w-5xl mx-auto min-h-screen p-4">
+    <div className="dashboard w-full mx-auto min-h-screen p-4 max-w-5xl ">
       <DashboardHeader />
-      <main className="main flex-1 mt-20">{children}</main>
+      <main className="main flex-1 mt-25">{children}</main>
     </div>
   );
 }
