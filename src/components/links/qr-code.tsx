@@ -59,7 +59,9 @@ export function QRCodeDisplay({
       canvas.width = finalSize + padding * 2;
       canvas.height = finalSize + padding * 2;
 
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue("--terminal-qr-background")
+        .trim();
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const svgData = new XMLSerializer().serializeToString(svg);

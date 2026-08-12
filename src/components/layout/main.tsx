@@ -1,24 +1,23 @@
-import React from "react";
 import CreateOfflineLink from "../links/create-offline-link";
 
 export default function Main() {
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-12 md:py-16 mt-10">
-      <div className="w-full max-w-2xl mx-auto space-y-8">
-        <div className="space-y-4 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-balance leading-tight">
-            Acorta tus enlaces con{" "}
-            <span className="font-mono bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              deVRL
-            </span>
-          </h1>
-          <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto">
-            La forma más sencilla y rápida de acortar tus URLs.
-          </p>
-        </div>
-
+    <main className="relative z-10 mx-auto flex w-[min(1010px,calc(100%-32px))] min-h-0 flex-1 flex-col justify-center py-8 max-md:w-[calc(100%-24px)] max-md:justify-start max-md:py-3">
+      <section className="mb-6 md:pl-5" aria-labelledby="landing-title">
+        <p className="mb-2 font-['VT323'] text-[25px] text-terminal-accent">&gt; deVRL_</p>
+        <h1
+          className="m-0 text-[clamp(42px,7vw,76px)] font-medium leading-[0.95] tracking-[-0.08em] text-terminal-text max-md:text-[clamp(38px,12vw,58px)]"
+          id="landing-title"
+        >
+          ACORTA LA WEB.
+        </h1>
+        <p className="mt-3 max-w-[620px] text-[clamp(13px,1.7vw,16px)] leading-6 text-terminal-muted">
+          Convierte URLs largas en enlaces simples.
+        </p>
+      </section>
+      <section aria-label="Create a short link">
         <CreateOfflineLink />
-      </div>
+      </section>
     </main>
   );
 }

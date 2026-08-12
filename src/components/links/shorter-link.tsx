@@ -49,16 +49,16 @@ export function ShorterLinkResult({
   return (
     <div
       className={cn(
-        "group relative flex items-center gap-3 rounded-lg  p-4 transition-all  cursor-pointer",
+        "group relative flex min-w-0 flex-1 items-center gap-3 p-3 transition-all cursor-pointer",
         className
       )}
       onClick={handleNavigate}
     >
       <div className="flex-1 flex items-center gap-2 min-w-0">
-        <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-        <div className="flex items-center gap-1 font-mono text-sm min-w-0 overflow-hidden">
-          <span className="text-muted-foreground">/</span>
-          <span className="text-foreground font-medium truncate">{slug}</span>
+        <ExternalLink className="h-4 w-4 shrink-0 text-terminal-muted" />
+        <div className="flex min-w-0 items-center gap-1 overflow-hidden font-mono text-sm">
+          <span className="text-terminal-muted">{host}/</span>
+          <span className="truncate font-medium text-terminal-text">{slug}</span>
         </div>
       </div>
 
@@ -66,7 +66,7 @@ export function ShorterLinkResult({
         type="button"
         variant="ghost"
         size="sm"
-        className="flex-shrink-0 h-8 w-8 p-0"
+         className="h-8 w-8 shrink-0 p-0 text-terminal-accent hover:bg-terminal-hover hover:text-terminal-text"
         onClick={handleCopy}
         aria-label="Copy link"
       >
