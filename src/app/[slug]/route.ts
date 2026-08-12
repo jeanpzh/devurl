@@ -11,7 +11,7 @@ const getLinkSchema = object({
 
 export const GET = async (
   req: NextRequest,
-  context: Promise<{ params: { slug: string } }>
+  context: { params: Promise<{ slug: string }> }
 ) => {
   const identifier = getClientIdentifier(req);
   const { success, reset, remaining } = await redirectRateLimit.limit(
@@ -30,8 +30,7 @@ export const GET = async (
     });
   }
 
-  const { params } = await context;
-  const { slug } = params;
+  const { slug } = await context.params;
   if (!slug) return new NextResponse("Slug es requerido", { status: 400 });
   const parsed = getLinkSchema.safeParse({ slug });
   if (!parsed.success) {

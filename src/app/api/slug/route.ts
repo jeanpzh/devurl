@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
   }
   const { data } = await supabase.auth.getUser();
 
-  await slugService.createSlug(parsed.data, data.user?.id!);
+  await slugService.createSlug(parsed.data, data.user?.id);
 
   return NextResponse.json(
     { url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/${slug}` },

@@ -12,13 +12,13 @@ export const GET = async (req: NextRequest) => {
   const searchTerm = term ? term.trim() : undefined;
   const supabase = await createClient();
   const { data, error: userError } = await supabase.auth.getUser();
-  if (!data || userError)
+  if (!data?.user || userError)
     return new NextResponse("Unauthorized", { status: 401 });
   const offset = (page - 1) * limit;
 
   const urlService = new UrlService(new UrlRepositoryImpl(supabase));
   const urls = await urlService.findAll(
-    data.user?.id!,
+    data.user.id,
     offset,
     limit,
     page,

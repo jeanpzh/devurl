@@ -1,4 +1,4 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient, type PostgrestError } from "@supabase/supabase-js";
 import { UrlRepository } from "./url.repository";
 
 export class UrlRepositoryImpl implements UrlRepository {
@@ -10,7 +10,7 @@ export class UrlRepositoryImpl implements UrlRepository {
 
   async create(params: {
     originalUrl: string;
-  }): Promise<{ data: number; error: any }> {
+  }): Promise<{ data: number; error: PostgrestError | null }> {
     const { data, error } = await this.supabaseClient
       .from("url")
       .insert({ original_url: params.originalUrl })
@@ -33,7 +33,10 @@ export class UrlRepositoryImpl implements UrlRepository {
 
     return { originalUrl: data.original_url };
   }
-  async update(id: number, data: { code: string }): Promise<{ error: any }> {
+  async update(
+    id: number,
+    data: { code: string }
+  ): Promise<{ error: PostgrestError | null }> {
     const { error } = await this.supabaseClient
       .from("url")
       .update({ code: data.code })

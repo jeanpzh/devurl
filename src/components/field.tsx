@@ -1,13 +1,18 @@
 import React from "react";
-import { Control, useController } from "react-hook-form";
+import {
+  Control,
+  FieldValues,
+  Path,
+  useController,
+} from "react-hook-form";
 import { Input } from "./ui/input";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Label } from "./ui/label";
 
-interface FieldProps {
-  control: Control<any>;
-  name: string;
+interface FieldProps<TFieldValues extends FieldValues> {
+  control: Control<TFieldValues>;
+  name: Path<TFieldValues>;
   label?: string;
   placeholder?: string;
   className?: string;
@@ -16,7 +21,7 @@ interface FieldProps {
   labelClassName?: string;
 }
 
-export default function Field({
+export default function Field<TFieldValues extends FieldValues>({
   control,
   name,
   label,
@@ -25,7 +30,7 @@ export default function Field({
   prefix,
   suffix,
   labelClassName,
-}: FieldProps) {
+}: FieldProps<TFieldValues>) {
   const {
     field,
     fieldState: { error },

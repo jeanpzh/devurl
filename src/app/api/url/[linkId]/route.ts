@@ -8,9 +8,13 @@ const blockedPaths = ["api", "dashboard"];
 
 export const PATCH = async (
   request: Request,
-  { params }: { params: { linkId: number } }
+  { params }: { params: Promise<{ linkId: string }> }
 ) => {
-  const { linkId } = params;
+  const { linkId: rawLinkId } = await params;
+  const linkId = Number(rawLinkId);
+  if (!Number.isInteger(linkId)) {
+    return NextResponse.json({ message: "Invalid link id" }, { status: 400 });
+  }
   const supabase = await createClient();
   const {
     data: { user },
@@ -52,7 +56,7 @@ export const PATCH = async (
 
     const oldSlug = oldData?.slug;
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("urls")
       .update({
         original_url: url,
@@ -80,7 +84,7 @@ export const PATCH = async (
     await urlService.updateUrl(user.id, oldSlug);
 
     return NextResponse.json({ message: "Link ha sido actualizado!" });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { message: "Error al actualizar el link" },
       { status: 500 }
@@ -90,9 +94,9 @@ export const PATCH = async (
 
 export const DELETE = async (
   request: Request,
-  { params }: { params: { linkId: string } }
+  { params }: { params: Promise<{ linkId: string }> }
 ) => {
-  const { linkId } = params;
+  const { linkId } = await params;
   const supabase = await createClient();
   const {
     data: { user },
