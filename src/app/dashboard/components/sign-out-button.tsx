@@ -7,7 +7,7 @@ export default function SignOutButton() {
   return (
     <Button
       variant="outline"
-      className="rounded-full bg-(--background-m) hover:bg-(--background-s) transition shadow-(--shadow-m) hover:shadow-(--shadow-s) cursor-pointer"
+      className="h-auto rounded-none border-0 bg-transparent! p-2 text-terminal-accent shadow-none transition-colors hover:bg-terminal-hover! hover:text-terminal-text cursor-pointer"
       onClick={signOut}
       aria-label="Cerrar sesión"
       title="Cerrar sesión"

@@ -29,10 +29,10 @@ export function AuthButtons({ isLoggedIn }: { isLoggedIn: boolean }) {
         <Button
           onClick={() => setShowSignIn(true)}
           variant="outline"
-          className="rounded-full bg-(--background-m) hover:bg-(--background-s) transition shadow-(--shadow-m) hover:shadow-(--shadow-s) cursor-pointer"
+          className="h-auto min-h-9 rounded-none border-0 bg-transparent! px-2 text-terminal-accent shadow-none hover:bg-terminal-hover! hover:text-terminal-text max-sm:px-1 max-sm:text-[10px]"
         >
-          <LogInIcon className="size-4 mr-2" />
-          Iniciar sesión
+          <LogInIcon className="size-4" />
+          <span>[ LOGIN ]</span>
         </Button>
         <SignInModal open={showSignIn} onOpenChange={setShowSignIn} />
       </>
@@ -44,10 +44,10 @@ export function AuthButtons({ isLoggedIn }: { isLoggedIn: boolean }) {
       <Link href={"/dashboard"}>
         <Button
           variant="outline"
-          className="rounded-full bg-(--background-m) hover:bg-(--background-s) transition shadow-(--shadow-m) hover:shadow-(--shadow-s) cursor-pointer"
+          className="h-auto rounded-none border-0 bg-transparent! p-0 text-terminal-accent shadow-none hover:bg-terminal-hover! hover:text-terminal-text"
         >
           <LayoutDashboard className="size-4" />
-          {!isMobile && <span className="ml-2">Dashboard</span>}
+          {!isMobile && <span className="ml-2">[ DASHBOARD ]</span>}
         </Button>
       </Link>
       <SignOutButton />
