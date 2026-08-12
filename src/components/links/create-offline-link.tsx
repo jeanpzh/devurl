@@ -45,18 +45,16 @@ export default function CreateOfflineLink() {
       </div>
 
       <div className="flex flex-col gap-4 p-4 md:gap-5 md:p-6">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col">
           <Field
             control={control}
             name="url"
             label="Target URL"
             placeholder="https://domain.com/very/long/url/that/you/want/to/shorten"
              labelClassName="text-xs uppercase tracking-[0.08em] text-terminal-accent-strong"
-            className="gap-2"
           />
-           <p className="text-[11px] leading-4 text-terminal-muted">Pega aquí la URL larga que deseas acortar.</p>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col">
           <Field
             control={control}
             name="slug"
@@ -71,7 +69,6 @@ export default function CreateOfflineLink() {
               </div>
             }
           />
-           <p className="text-[11px] leading-4 text-terminal-muted">Solo letras, números, guiones y guiones bajos. 3–20 caracteres.</p>
         </div>
 
         <Button

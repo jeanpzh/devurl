@@ -40,7 +40,6 @@ export default function AddShortUrlButton({
   const {
     mutateAsync: createShortUrl,
     isPending: isLoading,
-    error,
   } = useCreateLink();
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState<CreationResult | null>(null);
