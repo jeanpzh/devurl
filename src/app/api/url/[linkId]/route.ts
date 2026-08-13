@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
 import { createLinkSchema } from "@/schemas/link.schema";
-import { UrlService } from "../services/url.service";
-import { UrlRepositoryImpl } from "../repository/url.repository.impl";
 import { createClient } from "@/lib/supabase/server";
 
 const blockedPaths = ["api", "dashboard"];
 
 export const PATCH = async (
   request: Request,
-  { params }: { params: Promise<{ linkId: string }> }
+  { params }: { params: Promise<{ linkId: string }> },
 ) => {
   const { linkId: rawLinkId } = await params;
   const linkId = Number(rawLinkId);
@@ -30,11 +28,11 @@ export const PATCH = async (
     if (!validated.success) {
       return NextResponse.json(
         { message: "Invalid data", errors: validated.error.issues },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    if (blockedPaths.includes(validated.data.slug)) {
+    if (blockedPaths.includes(validated.data.slug ?? "")) {
       return NextResponse.json({ error: "Slug bloqueado" }, { status: 409 });
     }
 
@@ -43,7 +41,7 @@ export const PATCH = async (
     if (urlHost === domainHost) {
       return NextResponse.json(
         { error: "No puedes acortar una URL de este dominio" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -56,47 +54,55 @@ export const PATCH = async (
 
     const oldSlug = oldData?.slug;
 
-    const { error } = await supabase
+    const { data: updatedLink, error } = await supabase
       .from("urls")
       .update({
         original_url: url,
-        slug: slug,
+        slug: slug || oldSlug,
       })
-      .eq("id", linkId);
+      .eq("id", linkId)
+      .eq("user_id", user.id)
+      .select("id")
+      .maybeSingle();
     if (error) {
       if (error.code === "23505") {
         return NextResponse.json(
           { message: "Slug ya existe" },
-          { status: 400 }
+          { status: 400 },
         );
       }
-      console.log("Error updating URL:", error);
       return NextResponse.json(
         {
           message: "Inténtalo de nuevo más tarde.",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
-    const urlRepository = new UrlRepositoryImpl(supabase);
-    const urlService = new UrlService(urlRepository);
-    await urlService.updateUrl(user.id, oldSlug);
+    if (!updatedLink) {
+      return NextResponse.json(
+        { message: "Link no encontrado" },
+        { status: 404 },
+      );
+    }
 
     return NextResponse.json({ message: "Link ha sido actualizado!" });
   } catch {
     return NextResponse.json(
       { message: "Error al actualizar el link" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };
 
 export const DELETE = async (
-  request: Request,
-  { params }: { params: Promise<{ linkId: string }> }
+  _request: Request,
+  { params }: { params: Promise<{ linkId: string }> },
 ) => {
-  const { linkId } = await params;
+  const { linkId: rawLinkId } = await params;
+  if (!rawLinkId) {
+    return NextResponse.json({ message: "Invalid link id" }, { status: 400 });
+  }
   const supabase = await createClient();
   const {
     data: { user },
@@ -105,19 +111,28 @@ export const DELETE = async (
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const { error } = await supabase
-    .from("urls")
-    .delete()
-    .eq("slug", linkId)
-    .eq("user_id", user.id);
+  const numericLinkId = Number(rawLinkId);
+  let deleteQuery = supabase.from("urls").delete().eq("user_id", user.id);
+
+  // Accept the legacy slug identifier while clients transition to numeric IDs.
+  deleteQuery = Number.isInteger(numericLinkId)
+    ? deleteQuery.eq("id", numericLinkId)
+    : deleteQuery.eq("slug", rawLinkId);
+
+  const { data, error } = await deleteQuery.select("id").maybeSingle();
 
   if (error) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Unable to delete link" },
+      { status: 500 },
+    );
   }
-
-  const urlRepository = new UrlRepositoryImpl(supabase);
-  const urlService = new UrlService(urlRepository);
-  await urlService.deleteUrl(linkId, user.id);
+  if (!data) {
+    return NextResponse.json(
+      { message: "Link no encontrado" },
+      { status: 404 },
+    );
+  }
 
   return NextResponse.json({ message: "Link deleted successfully" });
 };

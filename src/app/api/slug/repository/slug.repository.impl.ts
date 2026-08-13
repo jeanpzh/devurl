@@ -10,10 +10,7 @@ export class SlugRepository implements ISlugRepository {
       .from("urls")
       .select("id")
       .eq("slug", slug);
-    if (error || !data) {
-      console.log(error);
-      return false;
-    }
+    if (error) throw new Error("Error comprobando el slug");
     return data.length > 0;
   }
 
@@ -22,38 +19,31 @@ export class SlugRepository implements ISlugRepository {
       url: string;
       slug: string;
     },
-    id?: string
+    userId?: string,
   ): Promise<void> {
     const { error } = await this.supabaseClient.from("urls").insert({
-      user_id: id!,
+      user_id: userId ?? null,
       original_url: params.url,
       slug: params.slug,
     });
     if (error) {
-      console.log(error);
+      if (error.code === "23505") throw new Error("Slug ya existe");
       throw new Error("Error creando el slug");
     }
   }
-  async findBySlug(slug: string): Promise<{ originalUrl: string | null }> {
-    const { data, error } = await this.supabaseClient
-      .from("urls")
-      .select("original_url")
-      .eq("slug", slug)
-      .single();
-    if (error || !data) {
-      console.log(error);
-      return { originalUrl: null };
-    }
-    return { originalUrl: data.original_url };
-  }
-  async incrementClickCount(slug: string): Promise<void> {
-    const { error } = await this.supabaseClient.rpc("increment_clicks", {
-      slug_input: slug,
-    });
-    if (error) {
-      console.log(error);
-    }
-    console.log("Incremented click count for slug:", slug);
-    return;
+  async findBySlug(
+    slug: string,
+  ): Promise<{ linkId: number | null; originalUrl: string | null }> {
+    const { data, error } = await this.supabaseClient.rpc(
+      "resolve_active_link",
+      {
+        slug_input: slug,
+      },
+    );
+    if (error) throw new Error("Unable to resolve link");
+    return {
+      linkId: data?.[0]?.link_id ?? null,
+      originalUrl: data?.[0]?.original_url ?? null,
+    };
   }
 }

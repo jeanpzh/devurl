@@ -1,65 +1,93 @@
-import { SupabaseClient, type PostgrestError } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
+import type { LinkRepository } from "@/backend/application/ports/link-repository";
+import type {
+  LinkStatus,
+  ListLinksQuery,
+  PaginatedLinks,
+} from "@/backend/domain/link";
 import { UrlRepository } from "./url.repository";
 
-export class UrlRepositoryImpl implements UrlRepository {
+export class UrlRepositoryImpl implements UrlRepository, LinkRepository {
   private readonly supabaseClient: SupabaseClient;
 
   constructor(supabaseClient: SupabaseClient) {
     this.supabaseClient = supabaseClient;
   }
 
-  async create(params: {
-    originalUrl: string;
-  }): Promise<{ data: number; error: PostgrestError | null }> {
-    const { data, error } = await this.supabaseClient
-      .from("url")
-      .insert({ original_url: params.originalUrl })
-      .select("id")
-      .single();
-    if (error || !data || !data.id) {
-      console.log(JSON.stringify(error));
-      throw new Error("Error creating URL");
-    }
-    return { data: data.id, error: null };
-  }
-  async findbyShortUrl(code: string): Promise<{ originalUrl: string }> {
-    const { data, error } = await this.supabaseClient
-      .from("url")
-      .select("original_url")
-      .eq("code", code)
-      .single();
-
-    if (error) throw new Error("URL not found");
-
-    return { originalUrl: data.original_url };
-  }
-  async update(
-    id: number,
-    data: { code: string }
-  ): Promise<{ error: PostgrestError | null }> {
-    const { error } = await this.supabaseClient
-      .from("url")
-      .update({ code: data.code })
-      .eq("id", id);
-    return { error };
-  }
   async findAll(
     id: string,
     offset: number,
     limit: number,
-    searchTerm?: string
+    searchTerm?: string,
+    status: LinkStatus = "all",
   ): Promise<{ data: ShortLink[]; count: number }> {
-    const { data, count, error } = await this.supabaseClient
+    let query = this.supabaseClient
       .from("urls")
-      .select("*", { count: "exact" })
+      .select(
+        "id,user_id,original_url,slug,created_at,updated_at,clicks_count,is_active",
+        { count: "exact" },
+      )
       .eq("user_id", id)
-      .ilike("slug", `%${searchTerm || ""}%`)
       .order("created_at", { ascending: false })
-      .range(offset, offset + limit - 1);
-    console.log("Fetched URLs:", data, "Count:", count);
+      .order("id", { ascending: false });
+
+    if (searchTerm) {
+      query = query.or(
+        `slug.ilike.%${searchTerm}%,original_url.ilike.%${searchTerm}%`,
+      );
+    }
+    if (status === "active") query = query.eq("is_active", true);
+    if (status === "no_clicks") query = query.eq("clicks_count", 0);
+
+    const { data, count, error } = await query.range(
+      offset,
+      offset + limit - 1,
+    );
 
     if (error) throw new Error("Error consiguiendo las URLs");
 
-    return { data, count: count || 0 };
+    return { data: data ?? [], count: count || 0 };
+  }
+
+  async listOwned(query: ListLinksQuery): Promise<PaginatedLinks> {
+    const { data, count } = await this.findAll(
+      query.userId,
+      (query.page - 1) * query.limit,
+      query.limit,
+      query.searchTerm,
+      query.status,
+    );
+    return {
+      data: (data as ShortLink[]).map((link) => ({
+        id: link.id,
+        userId: link.user_id,
+        slug: link.slug,
+        originalUrl: link.original_url,
+        isActive: link.is_active,
+        clicksCount: link.clicks_count,
+        createdAt: link.created_at,
+        updatedAt: link.updated_at,
+      })) as PaginatedLinks["data"],
+      metadata: {
+        total: count,
+        totalPages: Math.ceil(count / query.limit),
+        page: query.page,
+        limit: query.limit,
+      },
+    };
+  }
+
+  async findActiveBySlug(
+    slug: string,
+  ): Promise<{ id: number; originalUrl: string } | null> {
+    const { data, error } = await this.supabaseClient.rpc(
+      "resolve_active_link",
+      {
+        slug_input: slug,
+      },
+    );
+    if (error) throw new Error("Unable to resolve link");
+    const link = data?.[0];
+    return link ? { id: link.link_id, originalUrl: link.original_url } : null;
   }
 }

@@ -1,15 +1,11 @@
-import type { PostgrestError } from "@supabase/supabase-js";
+import type { LinkStatus } from "@/backend/domain/link";
 
 export interface UrlRepository {
-  create(data: {
-    originalUrl: string;
-  }): Promise<{ data: number; error: PostgrestError | null }>;
-  findbyShortUrl(code: string): Promise<{ originalUrl: string }>;
-  update(id: number, data: { code: string }): Promise<{ error: PostgrestError | null }>;
   findAll(
     id: string,
     offset: number,
     limit: number,
-    searchTerm?: string
+    searchTerm?: string,
+    status?: LinkStatus,
   ): Promise<{ data: ShortLink[]; count: number }>;
 }
