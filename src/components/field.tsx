@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Control,
-  FieldValues,
-  Path,
-  useController,
-} from "react-hook-form";
+import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { Input } from "./ui/input";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -59,7 +54,7 @@ export default function Field<TFieldValues extends FieldValues>({
     "focus:outline-none",
     "disabled:cursor-not-allowed disabled:opacity-50",
     hasError &&
-      "border-terminal-error focus:border-terminal-error focus:ring-terminal-error focus-visible:border-terminal-error focus-visible:ring-terminal-error"
+      "border-terminal-error focus:border-terminal-error focus:ring-terminal-error focus-visible:border-terminal-error focus-visible:ring-terminal-error",
   );
 
   return (
@@ -70,7 +65,7 @@ export default function Field<TFieldValues extends FieldValues>({
           className={cn(
             "flex items-center gap-1.5",
             "text-sm font-medium",
-            labelClassName
+            labelClassName,
           )}
         >
           <span>{label}</span>
@@ -129,7 +124,7 @@ export default function Field<TFieldValues extends FieldValues>({
                     "focus-within:ring-terminal-error",
                     "shadow-[inset_3px_0_0_rgba(212,106,106,0.9)]",
                   ]
-                : "border-terminal-border"
+                : "border-terminal-border",
             )}
           >
             <span className="shrink-0" aria-hidden="true">
@@ -152,7 +147,7 @@ export default function Field<TFieldValues extends FieldValues>({
                 "focus-visible:border-0",
                 "focus-visible:ring-0",
                 "focus-visible:ring-offset-0",
-                "disabled:cursor-not-allowed"
+                "disabled:cursor-not-allowed",
               )}
             />
           </div>
@@ -193,14 +188,11 @@ export default function Field<TFieldValues extends FieldValues>({
               />
 
               <span>
-                <span className="font-medium">ERR:</span>{" "}
-                {error?.message}
+                <span className="font-medium">ERR:</span> {error?.message}
               </span>
             </p>
           ) : helperText ? (
-            <p className="text-terminal-subtle">
-              {helperText}
-            </p>
+            <p className="text-terminal-subtle">{helperText}</p>
           ) : null}
         </div>
       </div>
