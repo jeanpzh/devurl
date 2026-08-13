@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 5
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
 
     steps:
       - name: Validate required secrets
@@ -28,7 +28,7 @@ jobs:
         run: |
           set -euo pipefail
           [[ -n "${SUPABASE_URL}" ]] || { echo "SUPABASE_URL is not configured" >&2; exit 1; }
-          [[ -n "${SUPABASE_SERVICE_ROLE_KEY}" ]] || { echo "SUPABASE_SERVICE_ROLE_KEY is not configured" >&2; exit 1; }
+          [[ -n "${SUPABASE_PUBLISHABLE_KEY}" ]] || { echo "SUPABASE_PUBLISHABLE_KEY is not configured" >&2; exit 1; }
 
       - name: Query urls table
         shell: bash
@@ -41,9 +41,9 @@ jobs:
             --max-time 30 \
             -o /dev/null \
             -w "%{http_code}" \
-            "${SUPABASE_URL}/rest/v1/urls?select=id&limit=1" \
-            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}")"
+            "${SUPABASE_URL}/rest/v1/keepalive?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_PUBLISHABLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_PUBLISHABLE_KEY}")"
 
           case "${status_code}" in
             2*) echo "Supabase keepalive succeeded (HTTP ${status_code})" ;;

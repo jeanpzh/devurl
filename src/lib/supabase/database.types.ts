@@ -36,6 +36,9 @@ export type Database = {
       analytics_coverage: {
         Row: { singleton: boolean; started_at: string | null };
       };
+      keepalive: {
+        Row: { id: boolean };
+      };
     };
     Functions: {
       get_user_analytics: {
