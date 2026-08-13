@@ -1,0 +1,51 @@
+name: Keep Supabase active
+
+on:
+  schedule:
+    # Run daily so the project is contacted well before the inactivity window.
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-keepalive
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    name: Query Supabase table
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ -n "${SUPABASE_URL}" ]] || { echo "SUPABASE_URL is not configured" >&2; exit 1; }
+          [[ -n "${SUPABASE_SERVICE_ROLE_KEY}" ]] || { echo "SUPABASE_SERVICE_ROLE_KEY is not configured" >&2; exit 1; }
+
+      - name: Query urls table
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          status_code="$(curl --silent --show-error --fail-with-body \
+            --retry 3 \
+            --retry-delay 5 \
+            --max-time 30 \
+            -o /dev/null \
+            -w "%{http_code}" \
+            "${SUPABASE_URL}/rest/v1/urls?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}")"
+
+          case "${status_code}" in
+            2*) echo "Supabase keepalive succeeded (HTTP ${status_code})" ;;
+            *) echo "Supabase keepalive failed (HTTP ${status_code})" >&2; exit 1 ;;
+          esac
