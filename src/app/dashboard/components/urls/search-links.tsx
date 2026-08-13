@@ -38,26 +38,29 @@ export default function SearchLinks() {
     if (!params.has("limit")) {
       params.set("limit", "10");
     }
+    if (!params.has("status")) {
+      params.set("status", "all");
+    }
 
     push(`/dashboard?${params.toString()}`, { scroll: false });
   }, [debouncedSearchTerm, push, isInitialized]);
 
   return (
-    <div className="relative max-w-sm">
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <div className="relative w-full max-w-xl">
+      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-terminal-muted" />
       <Input
         type="text"
-        placeholder="Busca el link!"
+        placeholder="Buscar por alias o destino..."
         aria-label="Buscar links"
         value={searchTerm}
         onChange={(e) => setSearchTerm?.(e.target.value)}
-        className="pl-10 pr-10 h-11 bg-card border-border text-foreground placeholder:text-muted-foreground"
+        className="h-11 rounded-none border-terminal-border bg-terminal-input pl-10 pr-10 text-xs text-terminal-text placeholder:text-terminal-muted"
       />
       {searchTerm && (
         <button
           onClick={() => setSearchTerm?.("")}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="Clear search"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-terminal-muted transition-colors hover:text-terminal-text"
+          aria-label="Limpiar búsqueda"
         >
           <X className="h-4 w-4" />
         </button>

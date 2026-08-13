@@ -13,7 +13,7 @@ export const signInWithGoogle = async () => {
   });
   if (error) {
     throw new Error(
-      "Error durante la autenticación con Google, por favor intenta de nuevo."
+      "Error durante la autenticación con Google, por favor intenta de nuevo.",
     );
   }
   if (data.url) {
@@ -30,7 +30,7 @@ export const signInWithGitHub = async () => {
   });
   if (error) {
     throw new Error(
-      "Error durante la autenticación con GitHub, por favor intenta de nuevo."
+      "Error durante la autenticación con GitHub, por favor intenta de nuevo.",
     );
   }
   if (data.url) {
@@ -43,7 +43,7 @@ export const signOut = async () => {
   const { error } = await supabase.auth.signOut();
   if (error) {
     throw new Error(
-      "Error durante la desconexión, por favor intenta de nuevo."
+      "Error durante la desconexión, por favor intenta de nuevo.",
     );
   }
   redirect("/");

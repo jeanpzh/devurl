@@ -5,6 +5,8 @@ import { EyeIcon, ExternalLinkIcon, CalendarIcon } from "lucide-react";
 import DeleteLink from "./delete-link";
 import UpdateLink from "./update-link";
 import { QRCodeDisplay } from "@/components/links/qr-code";
+import { Button } from "@/components/ui/button";
+import { useSetLinkStatus } from "@/app/dashboard/hooks/use-set-link-status";
 
 const URLItemContext = createContext<ShortLink | null>(null);
 
@@ -35,7 +37,7 @@ const URLItem = ({
 }) => {
   return (
     <URLItemProvider value={data}>
-      <div className="flex flex-col gap-4 w-full p-4 rounded-xl border border-border h-50 shadow-(--shadow-l) bg-(--background) hover:shadow-(--shadow-s) transition-all hover:bg-(--background-light)">
+      <div className="flex min-h-52 flex-col gap-4 border border-terminal-border bg-terminal-surface/40 p-4 transition-colors hover:border-terminal-accent/70 hover:bg-terminal-hover">
         {children}
       </div>
     </URLItemProvider>
@@ -46,7 +48,9 @@ URLItem.displayName = "URLItem";
 const URLItemShort = () => {
   const { slug } = useURLItemContext();
   return (
-    <ShorterLinkResult shorterLink={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/${slug}`} />
+    <ShorterLinkResult
+      shorterLink={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/${slug}`}
+    />
   );
 };
 URLItemShort.displayName = "URLItemShort";
@@ -64,15 +68,34 @@ const URLItemClicksCount = () => {
 };
 URLItemClicksCount.displayName = "URLItemClicksCount";
 
+const URLItemStatusButton = () => {
+  const { id, is_active } = useURLItemContext();
+  const { mutate, isPending } = useSetLinkStatus();
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      disabled={isPending}
+      aria-pressed={is_active}
+      onClick={() => mutate({ linkId: id, isActive: !is_active })}
+      className="rounded-none text-[10px] uppercase"
+    >
+      {is_active ? "Activo" : "Inactivo"}
+    </Button>
+  );
+};
+URLItemStatusButton.displayName = "URLItemStatusButton";
+
 const URLItemDeleteButton = () => {
-  const { original_url, slug } = useURLItemContext();
+  const { original_url, id } = useURLItemContext();
   return (
     <div
       className="flex items-center justify-end rounded-full bg-(--background-light) hover:bg-(--background) 
     hover:scale-105
     active:scale-90 transition-all shadow-(--shadow-s)"
     >
-      <DeleteLink linkId={slug} linkUrl={original_url} />
+      <DeleteLink linkId={id} linkUrl={original_url} />
     </div>
   );
 };
@@ -87,7 +110,9 @@ const URLItemQRButton = () => {
     shadow-(--shadow-s)
     "
     >
-      <QRCodeDisplay shortUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/${slug}`} />
+      <QRCodeDisplay
+        shortUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/${slug}`}
+      />
     </div>
   );
 };
@@ -146,17 +171,18 @@ URLItemCreatedAt.displayName = "URLItemCreatedAt";
 
 const URLItemComponent = ({ url }: { url: ShortLink }) => (
   <URLItem key={url.id} data={url}>
-    <div className="flex items-center justify-between border-b border-border gap-2">
+    <div className="flex items-center justify-between gap-2 border-b border-terminal-border pb-3">
       <div className="flex-1 min-w-0">
         <URLItemShort />
       </div>
       <div className="flex items-center gap-1.5">
+        <URLItemStatusButton />
         <URLItemQRButton />
         <URLItemUpdateButton />
         <URLItemDeleteButton />
       </div>
     </div>
-    <div className="p-2 gap-4 flex flex-col">
+    <div className="flex flex-col gap-4 px-1 pt-1">
       <URLItemOriginal />
       <div className="flex justify-between items-center">
         <URLItemCreatedAt />
@@ -175,5 +201,6 @@ export {
   URLItemCreatedAt,
   URLItemUpdateButton,
   URLItemClicksCount,
+  URLItemStatusButton,
   URLItemDeleteButton,
 };

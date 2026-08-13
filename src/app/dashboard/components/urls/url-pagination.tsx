@@ -58,7 +58,7 @@ export default function URLPagination() {
           />
         </Pagination>
       )}
-      {!isLoading && (
+      {!isLoading && totalItems > 0 && (
         <PaginationInfo
           currentPage={currentPage}
           totalItems={totalItems}

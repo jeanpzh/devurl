@@ -1,12 +1,23 @@
 import Logo from "@/components/logo";
 import UserProfile from "./user-profile";
 import SignOutButton from "./sign-out-button";
+import Link from "next/link";
+import { ModeToggle } from "@/components/theme-toggle";
 
 export default function DashboardHeader() {
   return (
-    <header className="header flex items-center justify-between w-full px-4 bg-background p-4 border-b border-border backdrop:blur-sm fixed top-0 left-0 right-0 z-50 h-20 max-w-5xl mx-auto">
-      <Logo />
-      <div className="flex items-center gap-8">
+    <header className="sticky top-0 z-40 flex min-h-14 items-center justify-between border-b border-terminal-border-strong bg-terminal-canvas/95 px-4 backdrop-blur sm:px-6">
+      <Link
+        href="/dashboard"
+        className="flex items-center gap-2 text-sm font-semibold tracking-wide text-terminal-text sm:text-base"
+      >
+        <Logo />
+        <span className="hidden text-terminal-muted sm:inline">
+          ://registry
+        </span>
+      </Link>
+      <div className="flex items-center gap-3 sm:gap-6">
+        <ModeToggle />
         <UserProfile />
         <SignOutButton />
       </div>

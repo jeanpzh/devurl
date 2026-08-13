@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 async function updateShortUrl(
   linkId: number,
-  data: UpdateLinkInput
+  data: UpdateLinkInput,
 ): Promise<void> {
   const response = await fetch(`/api/url/${linkId}`, {
     method: "PATCH",

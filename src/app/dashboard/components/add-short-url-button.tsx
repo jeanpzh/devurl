@@ -37,10 +37,7 @@ export default function AddShortUrlButton({
       slug: "",
     },
   });
-  const {
-    mutateAsync: createShortUrl,
-    isPending: isLoading,
-  } = useCreateLink();
+  const { mutateAsync: createShortUrl, isPending: isLoading } = useCreateLink();
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState<CreationResult | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -82,9 +79,39 @@ export default function AddShortUrlButton({
   return (
     <>
       <Button
+        id="create-link"
         variant="outline"
         onClick={handleOpen}
-        className="cursor-pointer hover:scale-105 active:scale-95 duration-300 ease-in-out gap-2 bg-(--background) hover:bg-(--background-light) text-foreground border border-border shadow-(--shadow-s) h-10 px-3 flex items-center text-base md:h-11 md:px-4 md:text-lg"
+        className="h-10
+            cursor-pointer
+            gap-2
+            rounded-none
+        
+            border-terminal-accent
+            bg-terminal-accent
+            text-terminal-on-accent
+        
+            hover:border-terminal-accent-strong
+            hover:bg-terminal-accent-strong
+            hover:text-terminal-on-accent
+        
+            dark:border-terminal-accent
+            dark:bg-terminal-accent
+            dark:text-terminal-on-accent
+        
+            dark:hover:border-terminal-accent-strong
+            dark:hover:bg-terminal-accent-strong
+            dark:hover:text-terminal-on-accent
+        
+            px-3
+            text-[10px]
+            uppercase
+            tracking-[0.08em]
+            shadow-none
+            transition-colors
+        
+            md:h-11
+            md:px-4"
       >
         <PlusIcon className="w-4 h-4 md:w-5 md:h-5" />
         {children}
@@ -127,7 +154,10 @@ export default function AddShortUrlButton({
                 />
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs md:text-sm font-medium">
+                  <Label
+                    htmlFor="slug"
+                    className="text-xs md:text-sm font-medium"
+                  >
                     Personalizar Slug
                   </Label>
                   <div className="flex items-center gap-1 md:gap-2 w-full ">

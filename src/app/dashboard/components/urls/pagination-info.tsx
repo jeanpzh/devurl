@@ -15,8 +15,8 @@ export default function PaginationInfo({
   const end = Math.min(currentPage * limit, totalItems);
 
   return (
-    <div className="text-sm text-muted-foreground text-center">
-      Mostrando {start} - {end} de {totalItems} enlaces
+    <div className="text-[10px] uppercase tracking-[0.08em] text-terminal-muted">
+      Mostrando {start}-{end} de {totalItems} links
     </div>
   );
 }

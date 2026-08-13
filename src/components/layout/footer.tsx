@@ -10,7 +10,8 @@ export default function Footer() {
           className="text-terminal-accent hover:underline"
         >
           jeanpzh
-        </a>&nbsp; // &nbsp;2026
+        </a>
+        &nbsp; // &nbsp;2026
       </div>
     </footer>
   );

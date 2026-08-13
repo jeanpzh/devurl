@@ -14,7 +14,7 @@ import { Trash2, AlertTriangle } from "lucide-react";
 import { useDeleteLink } from "@/app/dashboard/hooks/use-delete-url";
 
 interface DeleteLinkButtonProps {
-  linkId: string;
+  linkId: number;
   linkUrl: string;
 }
 
@@ -32,7 +32,7 @@ export default function DeleteLinkButton({
         onSuccess: () => {
           setOpen(false);
         },
-      }
+      },
     );
   };
 

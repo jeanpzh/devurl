@@ -1,5 +1,7 @@
 import React from "react";
 import DashboardHeader from "./components/dashboard-header";
+import DashboardNavigation from "./components/dashboard-navigation";
+import DashboardFooter from "./components/dashboard-footer";
 
 export default function DashboardLayout({
   children,
@@ -7,9 +9,15 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="dashboard w-full mx-auto min-h-screen p-4 max-w-5xl ">
+    <div className="dashboard min-h-screen bg-terminal-canvas text-terminal-text">
       <DashboardHeader />
-      <main className="main flex-1 mt-25">{children}</main>
+      <div className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-[1500px]">
+        <DashboardNavigation />
+        <main className="main min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-7 lg:py-9">
+          {children}
+        </main>
+      </div>
+      <DashboardFooter />
     </div>
   );
 }

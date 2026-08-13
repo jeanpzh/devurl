@@ -16,12 +16,16 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
       <body className="bg-terminal-canvas font-['IBM_Plex_Mono'] text-terminal-text antialiased">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+        >
           <Providers>{children}</Providers>
         </ThemeProvider>
       </body>

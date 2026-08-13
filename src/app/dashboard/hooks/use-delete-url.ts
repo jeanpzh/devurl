@@ -2,10 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 interface DeleteLinkParams {
-  linkId: string;
+  linkId: number;
 }
 
-async function deleteShortUrl(linkId: string): Promise<void> {
+async function deleteShortUrl(linkId: number): Promise<void> {
   const response = await fetch(`/api/url/${linkId}`, {
     method: "DELETE",
   });

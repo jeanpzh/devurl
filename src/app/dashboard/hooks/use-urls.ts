@@ -6,15 +6,16 @@ interface FetchURLsParams {
   searchTerm?: string;
   page?: number;
   limit?: number;
+  status?: "all" | "active" | "no_clicks";
 }
 
 const fetchURLs = async (params: FetchURLsParams, signal?: AbortSignal) => {
-  const { searchTerm, page, limit } = params;
+  const { searchTerm, page, limit, status = "all" } = params;
   const url = `/api/url?q=${encodeURIComponent(
-    searchTerm || ""
+    searchTerm || "",
   )}&page=${encodeURIComponent(page ?? 1)}&limit=${encodeURIComponent(
-    limit ?? 10
-  )}`;
+    limit ?? 10,
+  )}&status=${encodeURIComponent(status)}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -33,13 +34,19 @@ const fetchURLs = async (params: FetchURLsParams, signal?: AbortSignal) => {
   return result;
 };
 
-export const useUrls = ({ searchTerm, page, limit }: FetchURLsParams) => {
+export const useUrls = ({
+  searchTerm,
+  page,
+  limit,
+  status = "all",
+}: FetchURLsParams) => {
   const setTotalItems = usePaginationStore((state) => state.setTotalItems);
   const setIsLoading = usePaginationStore((state) => state.setIsLoading);
 
   const query = useQuery({
-    queryKey: ["urls", searchTerm || "", page || 1, limit || 10],
-    queryFn: ({ signal }) => fetchURLs({ searchTerm, page, limit }, signal),
+    queryKey: ["urls", searchTerm || "", page || 1, limit || 10, status],
+    queryFn: ({ signal }) =>
+      fetchURLs({ searchTerm, page, limit, status }, signal),
     staleTime: 1000 * 30,
     gcTime: 1000 * 60 * 5,
   });
