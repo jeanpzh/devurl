@@ -63,7 +63,7 @@ export default function URLContainer() {
     <div className="flex w-full flex-col gap-5">
       <div className="flex flex-col gap-3 border-b border-terminal-border pb-4 lg:flex-row lg:items-center lg:justify-between">
         <SearchLinks />
-        <div className="flex gap-5 px-1 text-[10px] uppercase tracking-[0.08em] text-terminal-muted">
+        <div className="flex w-full gap-4 overflow-x-auto px-1 text-[10px] uppercase tracking-[0.08em] text-terminal-muted sm:gap-5">
           {[
             { key: "all", label: "Todos" },
             { key: "active", label: "Activos" },
@@ -83,11 +83,11 @@ export default function URLContainer() {
                     scroll: false,
                   });
                 }}
-                className={
+                className={`shrink-0 whitespace-nowrap ${
                   active
                     ? "border-b-2 border-terminal-accent pb-2 text-terminal-accent"
                     : "pb-2 transition-colors hover:text-terminal-text"
-                }
+                }`}
               >
                 {filter.label}
               </button>

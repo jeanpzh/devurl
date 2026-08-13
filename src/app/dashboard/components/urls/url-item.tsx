@@ -1,11 +1,23 @@
 "use client";
 import { ShorterLinkResult } from "@/components/links/shorter-link";
 import React, { createContext, use } from "react";
-import { EyeIcon, ExternalLinkIcon, CalendarIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  ChevronDownIcon,
+  EyeIcon,
+  ExternalLinkIcon,
+} from "lucide-react";
 import DeleteLink from "./delete-link";
 import UpdateLink from "./update-link";
 import { QRCodeDisplay } from "@/components/links/qr-code";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useSetLinkStatus } from "@/app/dashboard/hooks/use-set-link-status";
 
 const URLItemContext = createContext<ShortLink | null>(null);
@@ -71,18 +83,55 @@ URLItemClicksCount.displayName = "URLItemClicksCount";
 const URLItemStatusButton = () => {
   const { id, is_active } = useURLItemContext();
   const { mutate, isPending } = useSetLinkStatus();
+
   return (
-    <Button
-      type="button"
-      variant="outline"
-      size="sm"
-      disabled={isPending}
-      aria-pressed={is_active}
-      onClick={() => mutate({ linkId: id, isActive: !is_active })}
-      className="rounded-none text-[10px] uppercase"
-    >
-      {is_active ? "Activo" : "Inactivo"}
-    </Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={isPending}
+          className="h-10 min-w-32 justify-between rounded-none border-terminal-border-strong bg-terminal-surface px-3 text-[10px] uppercase tracking-[0.08em] text-terminal-text hover:border-terminal-accent hover:bg-terminal-hover hover:text-terminal-text"
+        >
+          <span className="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className={`size-2 rounded-full ${is_active ? "bg-terminal-status" : "bg-terminal-muted"}`}
+            />
+            {is_active ? "En línea" : "Inactivo"}
+          </span>
+          <ChevronDownIcon aria-hidden="true" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        className="min-w-32 rounded-none border-terminal-border bg-terminal-surface text-terminal-text"
+      >
+        <DropdownMenuRadioGroup
+          value={is_active ? "active" : "inactive"}
+          onValueChange={(value) => {
+            const nextIsActive = value === "active";
+            if (nextIsActive !== is_active) {
+              mutate({ linkId: id, isActive: nextIsActive });
+            }
+          }}
+        >
+          <DropdownMenuRadioItem
+            value="active"
+            className="rounded-none text-[10px] uppercase tracking-[0.08em] focus:bg-terminal-hover focus:text-terminal-text"
+          >
+            En línea
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem
+            value="inactive"
+            className="rounded-none text-[10px] uppercase tracking-[0.08em] focus:bg-terminal-hover focus:text-terminal-text"
+          >
+            Inactivo
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 URLItemStatusButton.displayName = "URLItemStatusButton";
@@ -125,7 +174,7 @@ const URLItemOriginal = () => {
       <div className="flex items-center gap-2">
         <div className="text-sm font-medium flex items-center gap-2">
           <ExternalLinkIcon className="size-4 text-muted-foreground" />
-          <span className="font-mono">
+          <span className="break-all font-mono text-xs sm:text-sm">
             {original_url.length > 30
               ? `${original_url.slice(0, 30)}...`
               : original_url}
@@ -171,11 +220,11 @@ URLItemCreatedAt.displayName = "URLItemCreatedAt";
 
 const URLItemComponent = ({ url }: { url: ShortLink }) => (
   <URLItem key={url.id} data={url}>
-    <div className="flex items-center justify-between gap-2 border-b border-terminal-border pb-3">
-      <div className="flex-1 min-w-0">
+    <div className="flex flex-col gap-3 border-b border-terminal-border pb-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0 flex-1">
         <URLItemShort />
       </div>
-      <div className="flex items-center gap-1.5">
+      <div className="flex w-full items-center justify-end gap-1.5 sm:w-auto">
         <URLItemStatusButton />
         <URLItemQRButton />
         <URLItemUpdateButton />
@@ -184,7 +233,7 @@ const URLItemComponent = ({ url }: { url: ShortLink }) => (
     </div>
     <div className="flex flex-col gap-4 px-1 pt-1">
       <URLItemOriginal />
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <URLItemCreatedAt />
         <URLItemClicksCount />
       </div>

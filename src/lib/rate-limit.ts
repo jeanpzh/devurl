@@ -1,4 +1,5 @@
 import { Ratelimit } from "@upstash/ratelimit";
+import { ipAddress } from "@vercel/functions";
 import { redis } from "./redis";
 import { NextRequest } from "next/server";
 
@@ -17,16 +18,16 @@ export const redirectRateLimit = new Ratelimit({
 });
 
 export function getClientIdentifier(request: NextRequest): string {
-  const ip = request.headers.get("x-forwarded-for");
-  if (!ip) return "anonymous";
-  return ip.split(",")[0].trim();
+  // Vercel sanitizes the forwarded IP header before it reaches functions.
+  // Keep requests without a detectable address in one bounded bucket rather
+  // than allowing callers to choose an arbitrary rate-limit key.
+  return `ip:${ipAddress(request) ?? "unknown"}`;
 }
 
 export async function checkRateLimit(request: NextRequest) {
   const identifier = getClientIdentifier(request);
-  const { success, limit, reset, remaining } = await slugRateLimit.limit(
-    identifier
-  );
+  const { success, limit, reset, remaining } =
+    await slugRateLimit.limit(identifier);
 
   return {
     rateLimited: !success,

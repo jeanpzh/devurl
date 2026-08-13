@@ -15,10 +15,10 @@ export default function DashboardNavigation() {
   const pathname = usePathname();
 
   return (
-    <aside className="border-terminal-border-strong bg-terminal-surface/40 md:w-44 md:shrink-0 md:border-r lg:w-52">
+    <aside className="w-full border-b border-terminal-border-strong bg-terminal-surface/40 md:w-44 md:shrink-0 md:border-b-0 md:border-r lg:w-52">
       <nav
         aria-label="Navegación del dashboard"
-        className="flex gap-1 overflow-x-auto p-2 md:sticky md:top-14 md:flex-col md:gap-3 md:p-4 md:pt-8"
+        className="flex gap-1 p-2 md:sticky md:top-14 md:flex-col md:gap-3 md:p-4 md:pt-8"
       >
         {items.map(({ href, label, icon: Icon }) => {
           const active =
@@ -31,7 +31,7 @@ export default function DashboardNavigation() {
               href={href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "group flex min-w-24 items-center gap-2 border border-transparent px-3 py-2 text-[10px] uppercase tracking-[0.1em] text-terminal-muted transition-colors hover:border-terminal-border hover:bg-terminal-hover hover:text-terminal-text md:min-w-0 md:flex-col md:items-start md:gap-3 md:px-4 md:py-3",
+                "group flex min-w-0 flex-1 items-center justify-center gap-2 border border-transparent px-2 py-2 text-[10px] uppercase tracking-[0.1em] text-terminal-muted transition-colors hover:border-terminal-border hover:bg-terminal-hover hover:text-terminal-text md:flex-none md:items-start md:justify-start md:gap-3 md:px-4 md:py-3",
                 active &&
                   "border-terminal-accent bg-terminal-hover text-terminal-accent-strong md:border-l-2 md:border-y-0 md:border-r-0",
               )}

@@ -7,13 +7,15 @@ export default async function UserProfile() {
     data: { user },
   } = await supabase.auth.getUser();
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex min-w-0 items-center gap-2">
       <img
         src={user?.user_metadata?.avatar_url}
         alt="User Avatar"
-        className="size-8 rounded-full"
+        className="size-8 shrink-0 rounded-full"
       />
-      <span className="font-mono text-xs">{user?.user_metadata?.name}</span>
+      <span className="hidden max-w-32 truncate font-mono text-xs sm:block">
+        {user?.user_metadata?.name}
+      </span>
     </div>
   );
 }

@@ -87,7 +87,7 @@ export default function QRPage() {
         />
       ) : (
         <div className="grid gap-0 border border-terminal-border lg:grid-cols-[1.2fr_0.8fr]">
-          <section className="border-b border-terminal-border p-5 lg:border-b-0 lg:border-r">
+          <section className="min-w-0 border-b border-terminal-border p-4 sm:p-5 lg:border-b-0 lg:border-r">
             <div className="relative">
               <Input
                 value={search}
@@ -106,7 +106,7 @@ export default function QRPage() {
                   key={link.id}
                   type="button"
                   onClick={() => setSelectedId(link.id)}
-                  className={`grid w-full grid-cols-[1.2fr_1fr_auto] gap-3 px-3 py-4 text-left text-xs transition-colors hover:bg-terminal-hover ${selected?.id === link.id ? "border-l-2 border-terminal-accent bg-terminal-hover" : ""}`}
+                  className={`grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-3 px-3 py-4 text-left text-xs transition-colors hover:bg-terminal-hover sm:grid-cols-[1.2fr_1fr_auto] ${selected?.id === link.id ? "border-l-2 border-terminal-accent bg-terminal-hover" : ""}`}
                 >
                   <span className="min-w-0">
                     <strong className="block truncate text-terminal-text">
@@ -119,7 +119,7 @@ export default function QRPage() {
                       )}
                     </span>
                   </span>
-                  <span className="truncate text-terminal-muted">
+                  <span className="hidden truncate text-terminal-muted sm:block">
                     {link.original_url}
                   </span>
                   <span className="text-terminal-status">LISTO</span>
@@ -127,7 +127,7 @@ export default function QRPage() {
               ))}
             </div>
           </section>
-          <section className="flex min-h-[500px] flex-col p-5">
+          <section className="flex min-h-[500px] min-w-0 flex-col p-4 sm:p-5">
             <div className="flex items-center justify-between border-b border-terminal-border pb-5">
               <div>
                 <p className="text-sm font-semibold uppercase">
@@ -141,11 +141,11 @@ export default function QRPage() {
             </div>
             {selected ? (
               <>
-                <div className="mx-auto mt-7 border border-terminal-border bg-white p-4">
+                <div className="mx-auto mt-7 max-w-full border border-terminal-border bg-white p-3 sm:p-4">
                   <QRCodeSVG
                     data-dashboard-qr
                     value={shortUrl}
-                    size={260}
+                    size={240}
                     level="H"
                     marginSize={margin}
                   />

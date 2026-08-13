@@ -26,7 +26,7 @@ export default function AnalyticsPage() {
         title="Analítica de tráfico"
         description="Resumen del rendimiento de tus enlaces."
       />
-      <div className="flex w-fit gap-0 border border-terminal-border bg-terminal-surface text-[10px] uppercase tracking-[0.08em] text-terminal-text">
+      <div className="flex w-full max-w-full overflow-x-auto border border-terminal-border bg-terminal-surface text-[10px] uppercase tracking-[0.08em] text-terminal-text sm:w-fit">
         {[
           ["7d", "7D"],
           ["30d", "30D"],
@@ -37,7 +37,7 @@ export default function AnalyticsPage() {
             type="button"
             aria-pressed={period === value}
             onClick={() => router.push(`/dashboard/analytics?period=${value}`)}
-            className={`border-r border-terminal-border px-5 py-3 last:border-r-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terminal-accent ${period === value ? "bg-terminal-accent text-terminal-on-accent" : "hover:bg-terminal-hover hover:text-terminal-text"}`}
+            className={`shrink-0 border-r border-terminal-border px-4 py-3 last:border-r-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terminal-accent sm:px-5 ${period === value ? "bg-terminal-accent text-terminal-on-accent" : "hover:bg-terminal-hover hover:text-terminal-text"}`}
           >
             {label}
           </button>
@@ -97,11 +97,11 @@ export default function AnalyticsPage() {
             />
           </section>
           <section className="grid gap-4 xl:grid-cols-[1.4fr_0.8fr]">
-            <div className="border border-terminal-border bg-terminal-surface/30 p-5">
+            <div className="border border-terminal-border bg-terminal-surface/30 p-4 sm:p-5">
               <h2 className="mb-5 text-sm font-semibold uppercase tracking-[0.08em]">
                 Clics // links actuales
               </h2>
-              <div className="flex h-56 items-end gap-2 border-b border-l border-terminal-border px-4 pb-0 pt-5">
+              <div className="flex h-56 min-w-0 items-end gap-1 border-b border-l border-terminal-border px-2 pb-0 pt-5 sm:gap-2 sm:px-4">
                 {topLinks.length === 0 ? (
                   <p className="m-auto text-xs text-terminal-muted">
                     Aún sin actividad.
@@ -135,7 +135,7 @@ export default function AnalyticsPage() {
                 .
               </p>
             </div>
-            <div className="border border-terminal-border bg-terminal-surface/30 p-5">
+            <div className="border border-terminal-border bg-terminal-surface/30 p-4 sm:p-5">
               <h2 className="mb-5 text-sm font-semibold uppercase tracking-[0.08em]">
                 Top links
               </h2>
